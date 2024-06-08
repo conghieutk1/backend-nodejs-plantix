@@ -61,8 +61,8 @@ app.use(bodyParser.urlencoded({ limit: '50mb', extended: true }));
 
 // Phục vụ các file tĩnh từ thư mục 'public'
 
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = dirname(__filename);
+// const __filename = fileURLToPath(import.meta.url);
+// const __dirname = dirname(__filename);
 
 app.use(express.static(__dirname + '/public'));
 
