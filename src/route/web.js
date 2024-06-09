@@ -1,5 +1,5 @@
 import express from 'express';
-// import login from '../controllers/auth/loginManageSystem.mjs';
+import authController from '../controllers/auth/authController';
 // import authMiddleware from '../middleware/auth.mjs';
 import passport from 'passport';
 
@@ -11,8 +11,19 @@ const initWebRoutes = (app) => {
         res.send('OK');
     });
 
-    // user
+    router.post('/auth/resgister', authController.handleRegisterAdmin);
 
+    // user
+    router.post('/auth/login', authController.handleLoginAdmin);
+    router.post('/logout', (req, res) => {
+        req.session.destroy((err) => {
+            if (err) {
+                return res.status(500).json({ success: false, message: 'Logout failed' });
+            }
+            res.clearCookie('connect.sid');
+            res.json({ success: true, message: 'Logged out' });
+        });
+    });
     // disease
 
     // history

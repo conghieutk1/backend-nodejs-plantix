@@ -19,9 +19,7 @@ module.exports = {
             fullName: {
                 type: Sequelize.STRING,
             },
-            role: {
-                type: Sequelize.STRING,
-            },
+
             gender: {
                 type: Sequelize.STRING,
             },
@@ -29,6 +27,9 @@ module.exports = {
                 type: Sequelize.STRING,
             },
             phoneNumber: {
+                type: Sequelize.STRING,
+            },
+            avatar: {
                 type: Sequelize.STRING,
             },
             is2FAEnabled: {

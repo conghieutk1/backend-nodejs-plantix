@@ -1,10 +1,44 @@
 import bcrypt from 'bcryptjs';
 import db from '../../models/index';
+import auth from '../../config/firebase-config.js';
+import { createUserWithEmailAndPassword, signInWithEmailAndPassword } from 'firebase/auth';
 
-exports.showLoginForm = (req, res) => {
-    res.render('login.ejs');
+let handleRegisterAdmin = async (req, res) => {
+    let { account, password } = req.body;
+    console.log('account: ', account, 'password: ', password);
+    if (!account || !password) {
+        return res.status(500).json({
+            errCode: 1,
+            message: 'Missing inputs parameter!',
+        });
+    }
 };
-
+let handleLoginAdmin = async (req, res, next) => {
+    return new Promise(async (resolve, reject) => {
+        const { email, password } = req.body;
+        // const user = validateUser(username, password);
+        console.log('email: ', email, 'password: ', password);
+        try {
+            let response = await signInWithEmailAndPassword(auth, email, password);
+            console.log('response: ', response);
+            res.status(200).json({ success: true, message: 'OK' });
+        } catch (error) {
+            const errorCode = error.code;
+            const errorMessage = error.message;
+            console.log('Lỗi đăng nhập errorCode: ', errorCode);
+            console.error('Lỗi đăng nhập errorMessage: ', errorMessage);
+            if (errorCode === 'auth/invalid-credential') {
+                res.status(401).send('Email hoặc mật khẩu không đúng. Vui lòng thử lại.');
+            } else if (errorCode === 'auth/too-many-requests') {
+                res.status(401).send(
+                    'Số lần đăng nhập không thành công của bạn đã vượt quá giới hạn. Vui lòng thử lại sau.',
+                );
+            } else {
+                res.status(500).send('Lỗi xác thực. Vui lòng thử lại sau');
+            }
+        }
+    });
+};
 exports.login = async (req, res) => {
     const { account, password } = req.body;
 
@@ -97,4 +131,8 @@ exports.logout = (req, res) => {
         });
         console.log('Logged out successfully');
     });
+};
+export default {
+    handleRegisterAdmin,
+    handleLoginAdmin,
 };
